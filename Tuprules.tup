@@ -1,0 +1,9 @@
+CC = clang
+CXX = clang++
+
+CXXFLAGS += -pedantic
+CXXFLAGS += -Wall -Wextra -Werror
+
+!cc = |> $(CC) $(CXXFLAGS) -c %f -o %o |> %B.o
+!cxx = |> $(CXX) $(CXXFLAGS) -c %f -o %o |> %B.o
+!ar = |> ar -crs %o %f |>
