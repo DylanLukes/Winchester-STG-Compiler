@@ -1,0 +1,213 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXFileReference section */
+		5377740714BDF29500276E5C /* wsc.1 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.man; path = wsc.1; sourceTree = "<group>"; };
+		5377740B14BDF29500276E5C /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		5377741714BDF7DC00276E5C /* Tupfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Tupfile; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		537773E814BDF1C800276E5C = {
+			isa = PBXGroup;
+			children = (
+				5377741714BDF7DC00276E5C /* Tupfile */,
+				5377740514BDF29500276E5C /* doc */,
+				5377740614BDF29500276E5C /* man */,
+				5377740814BDF29500276E5C /* src */,
+			);
+			sourceTree = "<group>";
+		};
+		5377740514BDF29500276E5C /* doc */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = doc;
+			sourceTree = "<group>";
+		};
+		5377740614BDF29500276E5C /* man */ = {
+			isa = PBXGroup;
+			children = (
+				5377740714BDF29500276E5C /* wsc.1 */,
+			);
+			path = man;
+			sourceTree = "<group>";
+		};
+		5377740814BDF29500276E5C /* src */ = {
+			isa = PBXGroup;
+			children = (
+				5377740C14BDF29500276E5C /* front */,
+				5377740D14BDF29500276E5C /* middle */,
+				5377740914BDF29500276E5C /* back */,
+				5377740A14BDF29500276E5C /* driver */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
+		5377740914BDF29500276E5C /* back */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = back;
+			sourceTree = "<group>";
+		};
+		5377740A14BDF29500276E5C /* driver */ = {
+			isa = PBXGroup;
+			children = (
+				5377740B14BDF29500276E5C /* main.cpp */,
+			);
+			path = driver;
+			sourceTree = "<group>";
+		};
+		5377740C14BDF29500276E5C /* front */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = front;
+			sourceTree = "<group>";
+		};
+		5377740D14BDF29500276E5C /* middle */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = middle;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXLegacyTarget section */
+		5377740F14BDF42900276E5C /* Winchester STG Compiler */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = upd;
+			buildConfigurationList = 5377741014BDF42900276E5C /* Build configuration list for PBXLegacyTarget "Winchester STG Compiler" */;
+			buildPhases = (
+			);
+			buildToolPath = /usr/local/bin/tup;
+			buildWorkingDirectory = "";
+			dependencies = (
+			);
+			name = "Winchester STG Compiler";
+			passBuildSettingsInEnvironment = 1;
+			productName = "Winchester STG Compiler";
+		};
+/* End PBXLegacyTarget section */
+
+/* Begin PBXProject section */
+		537773EA14BDF1C800276E5C /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0420;
+				ORGANIZATIONNAME = "Dylan Lukes";
+			};
+			buildConfigurationList = 537773ED14BDF1C800276E5C /* Build configuration list for PBXProject "Winchester STG Compiler" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 537773E814BDF1C800276E5C;
+			productRefGroup = 537773E814BDF1C800276E5C;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5377740F14BDF42900276E5C /* Winchester STG Compiler */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin XCBuildConfiguration section */
+		537773FB14BDF1C800276E5C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		537773FC14BDF1C800276E5C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		5377741114BDF42900276E5C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEBUGGING_SYMBOLS = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		5377741214BDF42900276E5C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		537773ED14BDF1C800276E5C /* Build configuration list for PBXProject "Winchester STG Compiler" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				537773FB14BDF1C800276E5C /* Debug */,
+				537773FC14BDF1C800276E5C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5377741014BDF42900276E5C /* Build configuration list for PBXLegacyTarget "Winchester STG Compiler" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5377741114BDF42900276E5C /* Debug */,
+				5377741214BDF42900276E5C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 537773EA14BDF1C800276E5C /* Project object */;
+}
