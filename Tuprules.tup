@@ -1,8 +1,11 @@
+TUP_ROOT = $(TUP_CWD)
+
 CC = clang
 CXX = clang++
 
-CXXFLAGS += -pedantic
+CXXFLAGS += -std=c++0x -pedantic
 CXXFLAGS += -Wall -Wextra -Werror
+CXXFLAGS += -Wno-unused-parameter
 
 !cc = |> $(CC) $(CXXFLAGS) -c %f -o %o |> %B.o
 !cxx = |> $(CXX) $(CXXFLAGS) -c %f -o %o |> %B.o

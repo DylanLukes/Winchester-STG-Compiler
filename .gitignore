@@ -12,13 +12,16 @@
 *.la
 *.a
 
+# Compiled (Intermediate) executables
+*.bin
+
 # Tup
 .tup
 
-## Xcode (ignore everything except the pbxproj)
+# Binary products directory
+bin/*
 
-# Exclude /build
-build/*
+## Xcode (ignore everything except the pbxproj)
 
 # Exclude temp nibs and swap files
 *~.nib

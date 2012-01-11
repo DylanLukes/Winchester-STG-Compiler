@@ -1,0 +1,2 @@
+: ../src/wsc.bin |> cp %f %o |> wsc
+ 
