@@ -1,2 +1,2 @@
 : ../src/wsc.bin |> cp %f %o |> wsc
- 
+: wsc |> chmod u+x %f |>
