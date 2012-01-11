@@ -15,7 +15,10 @@
 # Tup
 .tup
 
-# Xcode (ignore everything except the pbxproj)
+## Xcode (ignore everything except the pbxproj)
+
+# Exclude /build
+build/*
 
 # Exclude temp nibs and swap files
 *~.nib
