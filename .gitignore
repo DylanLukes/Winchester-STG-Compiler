@@ -15,6 +15,9 @@
 # Compiled (Intermediate) executables
 *.bin
 
+# flex/bison Intermediates
+*.yy.cpp
+
 # Tup
 .tup
 
