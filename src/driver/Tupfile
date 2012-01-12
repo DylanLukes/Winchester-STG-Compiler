@@ -1,4 +1,8 @@
 include_rules
 
+CXXFLAGS += -I../front
+CXXFLAGS += -I../middle
+CXXFLAGS += -I../back
+
 : foreach *.cpp |> !cxx |>
 : *.o |> !ar |> driver.a

@@ -1,6 +1,4 @@
 include_rules
 
-: Lexer.l |> flex++ --c++ -o %o %f |> %B.yy.cpp
-
 : foreach *.cpp |> !cxx |>
 : *.o |> !ar |> front.a
