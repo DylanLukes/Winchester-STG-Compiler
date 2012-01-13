@@ -4,8 +4,10 @@ CC = clang
 CXX = clang++
 
 CXXFLAGS += -stdlib=libc++ -std=c++0x -pedantic
+CXXFLAGS += -fno-rtti -fno-exceptions
 CXXFLAGS += -Wall -Wextra -Werror
 CXXFLAGS += -Wno-unused-parameter
+CXXFLAGS += -arch x86_64
 
 !cc = |> $(CC) $(CXXFLAGS) -c %f -o %o |> %B.o
 !cxx = |> $(CXX) $(CXXFLAGS) -c %f -o %o |> %B.o

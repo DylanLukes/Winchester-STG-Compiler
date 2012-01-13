@@ -9,7 +9,6 @@
 /* Begin PBXFileReference section */
 		53607CB414BF47F8003E5269 /* Tuprules.tup */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Tuprules.tup; sourceTree = "<group>"; };
 		5377741F14BE2FEF00276E5C /* bin */ = {isa = PBXFileReference; lastKnownFileType = folder; path = bin; sourceTree = "<group>"; };
-		5377742014BE2FEF00276E5C /* doc */ = {isa = PBXFileReference; lastKnownFileType = folder; path = doc; sourceTree = "<group>"; };
 		5377742114BE2FEF00276E5C /* man */ = {isa = PBXFileReference; lastKnownFileType = folder; path = man; sourceTree = "<group>"; };
 		5377742214BE2FEF00276E5C /* src */ = {isa = PBXFileReference; lastKnownFileType = folder; path = src; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -20,7 +19,6 @@
 			children = (
 				53607CB414BF47F8003E5269 /* Tuprules.tup */,
 				5377741F14BE2FEF00276E5C /* bin */,
-				5377742014BE2FEF00276E5C /* doc */,
 				5377742114BE2FEF00276E5C /* man */,
 				5377742214BE2FEF00276E5C /* src */,
 			);
