@@ -3,7 +3,7 @@ TUP_ROOT = $(TUP_CWD)
 CC = clang
 CXX = clang++
 
-CXXFLAGS += -std=c++0x -pedantic
+CXXFLAGS += -stdlib=libc++ -std=c++0x -pedantic
 CXXFLAGS += -Wall -Wextra -Werror
 CXXFLAGS += -Wno-unused-parameter
 

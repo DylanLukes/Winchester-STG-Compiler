@@ -1,3 +1,4 @@
 include_rules
 
-: driver/driver.a |> $(CXX) %f -o %o |> wsc.bin
+: driver/driver.a \
+  syntax/syntax.a |> $(CXX) %f -o %o |> wsc.bin

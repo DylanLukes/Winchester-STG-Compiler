@@ -3,4 +3,4 @@ include_rules
 CXXFLAGS += -I..
 
 : foreach *.cpp |> !cxx |>
-: *.o |> !ar |> driver.a
+: *.o |> !ar |> syntax.a
