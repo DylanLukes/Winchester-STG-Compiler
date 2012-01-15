@@ -34,7 +34,8 @@ namespace wsc {
       /* concrete */ class CaseExpression;
 
       /* abstract */ class Literal;
-      /* concrete */ class IntegerLiteral;
+      /* concrete */ class IntegralLiteral;
+      /* concrete */ class RealLiteral;
       
       /* abstract */ class Pattern;
       /* concrete */ class AlgebraicPattern;
@@ -66,7 +67,8 @@ namespace wsc {
         virtual void visit(LiteralPattern        &visitee) {}
         virtual void visit(DefaultPattern        &visitee) {}
         
-        virtual void visit(IntegerLiteral        &visitee) {}
+        virtual void visit(IntegralLiteral       &visitee) {}
+        virtual void visit(RealLiteral           &visitee) {}
         
         virtual void visit(Variable              &visitee) {}
         
@@ -83,8 +85,39 @@ namespace wsc {
       class Argument : public ASTNode {
       };
       
-      class VariableArgument final : public ASTNode {
+      class VariableArgument final : public Argument {
       public:
+        unique_ptr<Variable> var;
+        
+        VariableArgument(unique_ptr<Variable> var) : var(move(var)) {}
+        void accept(ASTVisitor &v) { v.visit(*this); }        
+      };
+      
+      class Literal : public ASTNode {
+        
+      };
+      
+      class LiteralArgument final : public Argument {
+      public:
+        unique_ptr<Literal> literal;
+        
+        LiteralArgument(unique_ptr<Literal> literal) : literal(move(literal)) {}
+        void accept(ASTVisitor &v) { v.visit(*this); } 
+      };
+      
+      class IntegralLiteral final : public Literal {
+      public:
+        int val;
+        
+        IntegralLiteral(int val) : val(val) {}
+        void accept(ASTVisitor &v) { v.visit(*this); }
+      };
+      
+      class RealLiteral final : public Literal {
+      public:
+        float val;
+        
+        RealLiteral(float val) : val(val) {}
         void accept(ASTVisitor &v) { v.visit(*this); }
       };
       
@@ -93,7 +126,6 @@ namespace wsc {
         string name;
         
         Variable(string name) : name(name) {}
-        
         void accept(ASTVisitor &v) { v.visit(*this); }
       };
       

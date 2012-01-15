@@ -1,4 +1,4 @@
 include_rules
 
 : driver/driver.a \
-  syntax/syntax.a |> $(CXX) $(CXXFLAGS) %f -o %o |> wsc.bin
+  syntax/syntax.a |> !ld |> wsc.bin
