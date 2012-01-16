@@ -1,134 +1,228 @@
 #pragma once
 
-#include <string>
 #include <memory>
+#include <string>
 #include <vector>
 
 using namespace std;
 
 namespace wsc {
-  namespace syntax {
-    namespace ast {
-
-      //typedef string Variable;
-
-      /* Forward Declarations */
-
-      class ASTVisitor;
-      /* abstract */ class ASTNode;
-
-      /* concrete */ class Alternative;
+  namespace ast {
+    /* Forward Declarations */
+    /* abstract */ class Node;
+    /* concrete */ class Visitor;
+    
+    /* concrete */ class Alternative;
       
-      /* abstract */ class Argument;
-      /* concrete */ class VariableArgument;
-      /* concrete */ class LiteralArgument;
+    /* abstract */ class Argument;
+    /* concrete */ class VariableArgument;
+    /* concrete */ class LiteralArgument;
 
-      /* abstract */ class Binding;
-      /* concrete */ class NonRecursiveBinding;
-      /* concrete */ class RecursiveBinding;
+    /* concrete */ class Binding;
 
-      /* abstract */ class Expression;
-      /* concrete */ class ApplicationExpression;
-      /* concrete */ class LiteralExpression;
-      /* concrete */ class LetExpression;
-      /* concrete */ class CaseExpression;
+    /* abstract */ class Expression;
+    /* concrete */ class ApplicationExpression;
+    /* concrete */ class LiteralExpression;
+    /* concrete */ class LetExpression;
+    /* concrete */ class CaseExpression;
 
-      /* abstract */ class Literal;
-      /* concrete */ class IntegralLiteral;
-      /* concrete */ class RealLiteral;
+    /* concrete */ class Identifier;
+    
+    /* abstract */ class Literal;
+    /* concrete */ class IntegralLiteral;
+    /* concrete */ class RealLiteral;
       
-      /* abstract */ class Pattern;
-      /* concrete */ class AlgebraicPattern;
-      /* concrete */ class LiteralPattern;
-      /* concrete */ class DefaultPattern;
+    /* abstract */ class Pattern;
+    /* concrete */ class AlgebraicPattern;
+    /* concrete */ class LiteralPattern;
+    /* concrete */ class DefaultPattern;
 
-      /* abstract */ class RValue;
-      /* concrete */ class ClosureRValue;
-      /* concrete */ class DataConRValue;
+    /* abstract */ class RValue;
+    /* concrete */ class ClosureRValue;
+    /* concrete */ class DataConRValue;
+    
+    class Visitor {
+    public:            
+      virtual void visit(Alternative           &a) {}
       
-      /* concrete */ class Variable;
-
-      class Literal;
-
-      class ASTVisitor {
-      public:
-        virtual void visit(VariableArgument      &visitee) {}
-        virtual void visit(LiteralArgument       &visitee) {}
-        
-        virtual void visit(NonRecursiveBinding   &visitee) {}
-        virtual void visit(RecursiveBinding      &visitee) {}
-        
-        virtual void visit(ApplicationExpression &visitee) {}
-        virtual void visit(LiteralExpression     &visitee) {}
-        virtual void visit(LetExpression         &visitee) {}
-        virtual void visit(CaseExpression        &visitee) {}
-        
-        virtual void visit(AlgebraicPattern      &visitee) {}
-        virtual void visit(LiteralPattern        &visitee) {}
-        virtual void visit(DefaultPattern        &visitee) {}
-        
-        virtual void visit(IntegralLiteral       &visitee) {}
-        virtual void visit(RealLiteral           &visitee) {}
-        
-        virtual void visit(Variable              &visitee) {}
-        
-        virtual void visit(ClosureRValue         &visitee) {}
-        virtual void visit(DataConRValue         &visitee) {}
-      };
-
-      class ASTNode {
-      public:
-        virtual ~ASTNode() {}
-        virtual void accept(ASTVisitor &v) = 0;
-      };
-
-      class Argument : public ASTNode {
-      };
+      /* Arguments */
+      virtual void visit(VariableArgument      &a) {}
+      virtual void visit(LiteralArgument       &a) {}
       
-      class VariableArgument final : public Argument {
-      public:
-        unique_ptr<Variable> var;
-        
-        VariableArgument(unique_ptr<Variable> var) : var(move(var)) {}
-        void accept(ASTVisitor &v) { v.visit(*this); }        
-      };
+      virtual void visit(Binding               &a) {}
       
-      class Literal : public ASTNode {
-        
-      };
+      /* Expressions */
+      virtual void visit(ApplicationExpression &a) {}
+      virtual void visit(LiteralExpression     &a) {}
+      virtual void visit(LetExpression         &a) {}
+      virtual void visit(CaseExpression        &a) {}
       
-      class LiteralArgument final : public Argument {
-      public:
-        unique_ptr<Literal> literal;
-        
-        LiteralArgument(unique_ptr<Literal> literal) : literal(move(literal)) {}
-        void accept(ASTVisitor &v) { v.visit(*this); } 
-      };
+      virtual void visit(Identifier            &a) {}
       
-      class IntegralLiteral final : public Literal {
-      public:
-        int val;
-        
-        IntegralLiteral(int val) : val(val) {}
-        void accept(ASTVisitor &v) { v.visit(*this); }
-      };
+      /* Literals */
+      virtual void visit(IntegralLiteral       &a) {}
+      virtual void visit(RealLiteral           &a) {}
       
-      class RealLiteral final : public Literal {
-      public:
-        float val;
-        
-        RealLiteral(float val) : val(val) {}
-        void accept(ASTVisitor &v) { v.visit(*this); }
-      };
+      /* Patterns */
+      virtual void visit(AlgebraicPattern      &a) {}
+      virtual void visit(LiteralPattern        &a) {}
+      virtual void visit(DefaultPattern        &a) {}
       
-      class Variable final : public ASTNode {
-      public:
-        string name;
-        
-        Variable(string name) : name(name) {}
-        void accept(ASTVisitor &v) { v.visit(*this); }
-      };
+      /* RValues */
+      virtual void visit(ClosureRValue         &a) {}
+      virtual void visit(DataConRValue         &a) {}
       
-    }
+    };
+    
+    class Node {
+    public:
+      virtual void accept(Visitor &v) = 0;
+    };
+    
+    class Alternative final : Node {
+    public:
+      shared_ptr<Pattern> pattern;
+      shared_ptr<Expression> expression;
+      
+      Alternative(shared_ptr<Pattern> pattern, shared_ptr<Expression> expression) : pattern(pattern), expression(expression) {}
+      void accept(Visitor &v) override;
+    };
+    
+    class Argument : public Node {};
+    
+    class VariableArgument final : public Argument {
+    public:
+      shared_ptr<Identifier> variable;
+      
+      VariableArgument(shared_ptr<Identifier> variable) : variable(variable) {}
+      void accept(Visitor &v) override;
+    };
+    
+    class LiteralArgument final : public Argument {
+    public:
+      shared_ptr<Literal> literal;
+      
+      LiteralArgument(shared_ptr<Literal> literal) : literal(literal) {}
+      void accept(Visitor &v) override;
+    };
+        
+    class Binding final : public Node {
+    public:
+      shared_ptr<Identifier> binder;
+      shared_ptr<RValue> bindee;
+      
+      Binding(shared_ptr<Identifier> binder, shared_ptr<RValue> bindee) : binder(binder), bindee(bindee) {}
+      void accept(Visitor &v) override;
+    };
+    
+    class Expression : public Node {};
+    
+    class ApplicationExpression final : public Expression {
+    public:
+      shared_ptr<Identifier> function;
+      vector<shared_ptr<Argument>> arguments;
+      
+      ApplicationExpression(shared_ptr<Identifier> function, vector<shared_ptr<Argument>> arguments) : function(function), arguments(arguments) {}
+      void accept(Visitor &v) override;
+    };
+    
+    class LiteralExpression final : public Expression {
+    public:
+      shared_ptr<Literal> literal;
+      
+      LiteralExpression(shared_ptr<Literal> literal) : literal(literal) {}
+      void accept(Visitor &v) override;
+    };
+    
+    class LetExpression final : public Expression {
+    public:
+      vector<shared_ptr<Binding>> bindings;
+      shared_ptr<Expression> expression;
+      
+      LetExpression(vector<shared_ptr<Binding>> bindings, shared_ptr<Expression> expression) : bindings(bindings), expression(expression) {}
+      void accept(Visitor &v) override;
+    };
+    
+    class CaseExpression final : public Expression {
+    public:
+      shared_ptr<Expression> scrutinee;
+      shared_ptr<Identifier> case_binder;
+      vector<shared_ptr<Alternative>> alternatives;
+      
+      CaseExpression(shared_ptr<Expression> scrutinee, shared_ptr<Identifier> case_binder, vector<shared_ptr<Alternative>> alternatives) : scrutinee(scrutinee), case_binder(case_binder), alternatives(alternatives) {}
+      void accept(Visitor &v) override;
+    };
+    
+    class Identifier final : public Node {
+    public:
+      string name;
+      
+      Identifier(string name) : name(name) {}
+      void accept(Visitor &v) override; 
+    };
+    
+    class Literal : public Node {};
+    
+    class IntegralLiteral final : public Literal {
+    public:
+      int value;
+      
+      IntegralLiteral(int value) : value(value) {}
+      void accept(Visitor &v) override;
+    };
+    
+    class RealLiteral final : public Literal {
+    public:
+      float value;
+      
+      RealLiteral(float value) : value(value) {}
+      void accept(Visitor &v) override;
+    };
+    
+    class Pattern : public Node {};
+    
+    class AlgebraicPattern final : public Pattern {
+    public:
+      shared_ptr<Identifier> constructor;
+      vector<shared_ptr<Identifier>> binders;
+      
+      AlgebraicPattern(shared_ptr<Identifier> constructor, vector<shared_ptr<Identifier>> binders) : constructor(constructor), binders(binders) {}
+      void accept(Visitor &v) override;
+    };
+    
+    class LiteralPattern final : public Pattern {
+    public:
+      shared_ptr<Literal> literal;
+      
+      LiteralPattern(shared_ptr<Literal> literal) : literal(literal) {}
+      void accept(Visitor &v) override;
+    };
+    
+    class DefaultPattern final : public Pattern {
+    public:
+      DefaultPattern() {}
+      void accept(Visitor &v) override;
+    };
+    
+    class RValue : public Node {};
+    
+    class ClosureRValue final : public RValue {
+    public:
+      enum UpdateFlag { UPDATABLE, REENTRANT } update_flag;
+      vector<shared_ptr<Identifier>> binders;
+      shared_ptr<Expression> expression;
+      
+      ClosureRValue(UpdateFlag update_flag, vector<shared_ptr<Identifier>> binders, shared_ptr<Expression> expression) : update_flag(update_flag), binders(binders), expression(expression) {}
+      void accept(Visitor &v) override;
+    };
+    
+    class DataConRValue final : public RValue {
+    public:
+      shared_ptr<Identifier> data_constructor;
+      vector<shared_ptr<Argument>> arguments;
+      
+      DataConRValue(shared_ptr<Identifier> data_constructor, vector<shared_ptr<Argument>> arguments) : data_constructor(data_constructor), arguments(arguments) {}
+      void accept(Visitor &v) override;
+    };
   }
 }
