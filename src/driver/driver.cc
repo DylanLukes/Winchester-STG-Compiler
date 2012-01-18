@@ -1,7 +1,7 @@
 #include <memory>
 #include <string>
 #include <iostream>
-#include <syntax/ast.h>
+#include <syntax/ast.hh>
 
 using namespace std;
 using namespace wsc::ast;
