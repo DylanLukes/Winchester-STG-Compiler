@@ -1,4 +1,4 @@
-#include "ast.h"
+#include "ast.hh"
 
 using namespace wsc::ast;
 

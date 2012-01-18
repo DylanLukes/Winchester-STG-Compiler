@@ -2,7 +2,7 @@
 #include <string>
 #include <cstdlib>
 
-#include "lexer.h"
+#include "lexer.hh"
 
 using namespace std;
 using namespace wsc::lex;
