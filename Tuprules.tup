@@ -13,4 +13,4 @@ LDFLAGS += -stdlib=libc++
 !cxx = |> $(CXX) $(CXXFLAGS) -c %f -o %o |> %B.o
 !ld = |> $(LD) $(LDFLAGS) %f -o %o |> %B.bin
 !ar = |> ar -crs %o %f |>
-!lex = |> lex %f |>
+!ragel = |> ragel -C -G2 -o %o %f |> %B.cc
