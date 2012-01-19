@@ -20,7 +20,7 @@ namespace wsc {
       Lexer(string filename);
       ~Lexer();
     
-    void lex();
+    int lex();
 
     private:
       ifstream in_file;
