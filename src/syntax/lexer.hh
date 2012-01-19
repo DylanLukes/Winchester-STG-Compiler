@@ -24,7 +24,7 @@ namespace wsc {
 
     private:
       ifstream in_file;
-      unique_ptr<char, void (*)(void*)> in_buf;
+      unique_ptr<char[]> in_buf;
 
     	int cs, act;
     	const char *ts, *te;

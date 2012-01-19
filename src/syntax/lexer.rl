@@ -21,7 +21,7 @@ using namespace wsc::lex;
 
 %% write data;
 
-Lexer::Lexer(string filename) : in_file(filename.c_str(), ifstream::in), in_buf((char *)malloc(BUF_SIZE), free) {
+Lexer::Lexer(string filename) : in_file(filename.c_str(), ifstream::in), in_buf(new char[BUF_SIZE]) {
   // initialize lemon parser (maybe pass in instead?)
   %% write init;
 }
@@ -63,7 +63,7 @@ int Lexer::lex() {
     if(cs == wsc_lex_error) {
       // Machine failed before finding a token
       cerr << "LEX ERROR: Failed before finding a token." << endl;
-      return - 1;
+      return -1;
     }
 
     if(ts == 0) {
