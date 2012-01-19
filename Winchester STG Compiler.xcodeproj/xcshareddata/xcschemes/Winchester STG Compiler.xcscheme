@@ -48,7 +48,7 @@
       debugDocumentVersioning = "YES"
       allowLocationSimulation = "YES">
       <PathRunnable
-         FilePath = "/Users/dlukes/Desktop/Winchester STG Compiler/bin/wsc">
+         FilePath = "/Users/dlukes/Desktop/Winchester-STG-Compiler/bin/wsc">
       </PathRunnable>
       <MacroExpansion>
          <BuildableReference

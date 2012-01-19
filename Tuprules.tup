@@ -6,9 +6,11 @@ LD = clang++
 CXXFLAGS += -stdlib=libc++ -std=c++0x -pedantic
 CXXFLAGS += -Wall -Wextra -Werror
 CXXFLAGS += -Wno-unused-parameter
+CXXFLAGS += -fno-rtti -fno-exceptions
 CXXFLAGS += -arch x86_64
+CXXFLAGS += -g
 
-LDFLAGS += -stdlib=libc++
+LDFLAGS += -g -stdlib=libc++
 
 !cxx = |> $(CXX) $(CXXFLAGS) -c %f -o %o |> %B.o
 !ld = |> $(LD) $(LDFLAGS) %f -o %o |> %B.bin

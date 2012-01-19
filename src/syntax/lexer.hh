@@ -1,3 +1,12 @@
+#pragma once
+
+#include <cstdlib>
+#include <iostream>
+#include <fstream>
+#include <memory>
+
+using namespace std;
+
 namespace wsc {
 	namespace lex {
 		enum Token {
@@ -8,11 +17,15 @@ namespace wsc {
 
     class Lexer {
     public:
-      Lexer();
+      Lexer(string filename);
       ~Lexer();
     
-    void lex(const char *data, size_t len);
+    void lex();
+
     private:
+      ifstream in_file;
+      unique_ptr<char, void (*)(void*)> in_buf;
+
     	int cs, act;
     	const char *ts, *te;
     	void *lemon_parser;

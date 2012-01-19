@@ -1,11 +1,9 @@
-#include <iostream>
-#include <string>
-#include <cstdlib>
-
 #include "lexer.hh"
 
 using namespace std;
 using namespace wsc::lex;
+
+#define BUF_SIZE (4096)
 
 %%{
   machine wsc_lex;
@@ -23,9 +21,9 @@ using namespace wsc::lex;
 
 %% write data;
 
-Lexer::Lexer() {
-  // initialize lemon parser (maybe pass in instead?)
+Lexer::Lexer(string filename) : in_file(filename.c_str(), ifstream::in), in_buf((char *)malloc(BUF_SIZE), free) {
 
+  // initialize lemon parser (maybe pass in instead?)
   %% write init;
 }
 
@@ -34,9 +32,11 @@ Lexer::~Lexer() {
 }
 
 // maybe I should work a stringbuf backed stream in here instead
-void Lexer::lex(const char *data, size_t len) {
-  const char* p = data;
-  const char* pe = p + len;
+void Lexer::lex() {
+  int bytes_read = in_file.readsome(in_buf.get(), BUF_SIZE);
+
+  const char* p   = in_buf.get();
+  const char* pe  = p + bytes_read;
   const char* eof = pe;
 
   %% write exec;
