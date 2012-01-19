@@ -1,5 +1,8 @@
 #include "lexer.hh"
 
+#include <cstdlib>
+#include <iostream>
+
 using namespace std;
 using namespace wsc::lex;
 
@@ -9,12 +12,25 @@ using namespace wsc::lex;
   machine wsc_lex;
       
   main := |*
-    ([a-zA-Z_][a-zA-Z0-9_]*)  => {cout << "IDENT, "; };
-    ([0-9]+('.'[0-9]+)?)      => {cout << "NUM, ";   };
-    '.'                       => {cout << "DOT, ";   };
-    '+'                       => {cout << "ADD, ";   };
-    '-'                       => {cout << "SUB, ";   };
-    "λ"                       => {cout << "LAMDA, "; };
+    ';'                       => {cout << "SEMI\n";   };
+    '.'                       => {cout << "PERIOD\n"; };
+    '='                       => {cout << "EQ\n";     };
+    '\\'                      => {cout << "BSLASH\n"; };
+    '('                       => {cout << "LPAREN\n"; };
+    ')'                       => {cout << "RPAREN\n"; };
+    '['                       => {cout << "LBRACK\n"; };
+    ']'                       => {cout << "RBRACK\n"; };
+    '{'                       => {cout << "LBRACE\n"; };
+    '}'                       => {cout << "RBRACE\n"; };
+    '->'                      => {cout << "RARROW\n"; };
+
+    ([A-Z_][a-zA-Z0-9_#]*)    => {cout << "CON ID: " << string(ts, te-ts) << "\n"; };
+    ([a-zA-Z_][a-zA-Z0-9_#]*) => {cout << "ID: " << string(ts, te-ts) << "\n"; };
+    ([+\-*#]+)                => {cout << "SYM: " << string(ts, te-ts) << "\n"; };
+    ([0-9]+('.'[0-9]+)?)      => {cout << "NUM\n";    };
+
+    # White space
+    (any - 33..126)+;
   *|;
       
 }%%
@@ -35,7 +51,7 @@ int Lexer::lex() {
   bool done = false;
   int space = 0, have = 0, len = 0;
 
-  while(!done){
+  while (!done) {
     space = BUF_SIZE - have;
     if (space == 0) {
       // Buffer is full
@@ -51,7 +67,7 @@ int Lexer::lex() {
     const char *eof = 0;
 
     // Check for EOF
-    if(len == 0) {
+    if (len == 0) {
       eof = pe;
       done = true;
         // Note: EOF doesn't mean we don't have more to lex!
@@ -60,13 +76,13 @@ int Lexer::lex() {
 
     %% write exec;
 
-    if(cs == wsc_lex_error) {
+    if (cs == wsc_lex_error) {
       // Machine failed before finding a token
       cerr << "LEX ERROR: Failed before finding a token." << endl;
       return -1;
     }
 
-    if(ts == 0) {
+    if (ts == 0) {
       have = 0;
     } else {
       // There is a prefix to preserve, shift it over.
