@@ -55,7 +55,7 @@ int Lexer::lex() {
       eof = pe;
       done = true;
         // Note: EOF doesn't mean we don't have more to lex!
-        // We'll let the roof run it's course.
+        // We'll let the loop run it's course.
     }
 
     %% write exec;
