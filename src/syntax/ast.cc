@@ -4,8 +4,8 @@ using namespace wsc::ast;
 
 void Alternative::accept(Visitor &v) {
   v.visit(*this);
-  //pattern->accept(v);
-  //expression->accept(v);
+  pattern->accept(v);
+  expression->accept(v);
 }
 
 void VariableArgument::accept(Visitor &v) {

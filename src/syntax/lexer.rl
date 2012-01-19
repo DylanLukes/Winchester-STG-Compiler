@@ -10,26 +10,13 @@ using namespace wsc::lex;
 %%{
   machine wsc_lex;
       
-  action tok_number {
-    cout << "NUM";
-  }
-      
-  action tok_plus {
-    cout << "PLUS";
-  }
-      
-  action tok_minus {
-    cout << "MINUS";
-  }
-      
-  number = [0-9]+('.'[0-9]+)?;
-  plus  = '+';
-  minus = '-';
-      
   main := |*
-    number => tok_number;
-    plus => tok_plus;
-    minus => tok_minus;
+    ([a-zA-Z_][a-zA-Z0-9_]*)  => {cout << "IDENT, "; };
+    ([0-9]+('.'[0-9]+)?)      => {cout << "NUM, ";   };
+    '.'                       => {cout << "DOT, ";   };
+    '+'                       => {cout << "ADD, ";   };
+    '-'                       => {cout << "SUB, ";   };
+    "λ"                       => {cout << "LAMDA, "; };
   *|;
       
 }%%
@@ -37,17 +24,22 @@ using namespace wsc::lex;
 %% write data;
 
 Lexer::Lexer() {
+  // initialize lemon parser (maybe pass in instead?)
+
   %% write init;
 }
 
 Lexer::~Lexer() {
-  
+  // dealloc lemon parser
 }
 
+// maybe I should work a stringbuf backed stream in here instead
 void Lexer::lex(const char *data, size_t len) {
   const char* p = data;
-  const char* pe = data + len;
+  const char* pe = p + len;
   const char* eof = pe;
 
   %% write exec;
+
+  // handle errors and left overs
 }

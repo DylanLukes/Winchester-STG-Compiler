@@ -10,12 +10,11 @@ namespace wsc {
     public:
       Lexer();
       ~Lexer();
-      
+    
     void lex(const char *data, size_t len);
     private:
     	int cs, act;
     	const char *ts, *te;
-			
     	void *lemon_parser;
     };
   }

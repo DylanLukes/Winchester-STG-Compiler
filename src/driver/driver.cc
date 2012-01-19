@@ -1,28 +1,21 @@
 #include <memory>
 #include <string>
 #include <iostream>
-#include <syntax/ast.hh>
+#include <syntax/lexer.hh>
 
 using namespace std;
-using namespace wsc::ast;
-
-class TestVisitor final : public Visitor {  
-  void visit(Identifier &a) {
-    cout << "Visiting identifier: " << a.name << endl;
-  }
-};
+using namespace wsc::lex;
 
 int main (int argc, const char * argv[])
 {
-  shared_ptr<Identifier> v(new Identifier("foo"));
-  shared_ptr<VariableArgument> va(new VariableArgument(v));
-    
-  shared_ptr<Argument> a(va);
-  
-  TestVisitor vs;
-  
-  a->accept(vs);
-  
+  Lexer l;
+
+  const char *text = "λx.x+x";
+
+  l.lex(text, strlen(text));
+
+  cout << endl;
+
   return 0;
 }
 
