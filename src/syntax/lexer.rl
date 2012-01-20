@@ -12,17 +12,17 @@ using namespace wsc::lex;
   machine wsc_lex;
       
   main := |*
-    ';'                       => {cout << "SEMI\n";   };
-    '.'                       => {cout << "PERIOD\n"; };
-    '='                       => {cout << "EQ\n";     };
-    '\\'                      => {cout << "BSLASH\n"; };
-    '('                       => {cout << "LPAREN\n"; };
-    ')'                       => {cout << "RPAREN\n"; };
-    '['                       => {cout << "LBRACK\n"; };
-    ']'                       => {cout << "RBRACK\n"; };
-    '{'                       => {cout << "LBRACE\n"; };
-    '}'                       => {cout << "RBRACE\n"; };
-    '->'                      => {cout << "RARROW\n"; };
+    ';'                       => {};
+    '.'                       => {};
+    '='                       => {};
+    '\\'                      => {};
+    '('                       => {};
+    ')'                       => {};
+    '['                       => {};
+    ']'                       => {};
+    '{'                       => {};
+    '}'                       => {};
+    '->'                      => {};
 
     ([A-Z_][a-zA-Z0-9_#]*)    => {cout << "CON ID: " << string(ts, te-ts) << "\n"; };
     ([a-zA-Z_][a-zA-Z0-9_#]*) => {cout << "ID: " << string(ts, te-ts) << "\n"; };

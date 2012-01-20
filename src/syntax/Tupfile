@@ -3,6 +3,6 @@ include_rules
 CXXFLAGS += -I..
 
 : *.rl |> !ragel |>
-: *.y |> !lemon |>
+# : *.y |> !lemon |>
 : foreach *.cc |> !cxx |>
 : *.o |> !ar |> syntax.a

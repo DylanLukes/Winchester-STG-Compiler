@@ -3,8 +3,6 @@
 #include <fstream>
 #include <memory>
 
-using namespace std;
-
 namespace wsc {
 	namespace lex {
 		enum Token {
@@ -15,14 +13,14 @@ namespace wsc {
 
     class Lexer {
     public:
-      Lexer(string filename);
+      Lexer(std::string filename);
       ~Lexer();
     
     int lex();
 
     private:
-      ifstream in_file;
-      unique_ptr<char[]> in_buf;
+      std::ifstream in_file;
+      std::unique_ptr<char[]> in_buf;
 
     	int cs, act;
     	const char *ts, *te;

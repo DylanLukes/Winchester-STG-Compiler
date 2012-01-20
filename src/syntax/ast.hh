@@ -4,8 +4,6 @@
 #include <string>
 #include <vector>
 
-using namespace std;
-
 namespace wsc {
   namespace ast {
     /* Forward Declarations */
@@ -81,10 +79,10 @@ namespace wsc {
     
     class Alternative final : Node {
     public:
-      shared_ptr<Pattern> pattern;
-      shared_ptr<Expression> expression;
+      std::shared_ptr<Pattern> pattern;
+      std::shared_ptr<Expression> expression;
       
-      Alternative(shared_ptr<Pattern> pattern, shared_ptr<Expression> expression) : pattern(pattern), expression(expression) {}
+      Alternative(std::shared_ptr<Pattern> pattern, std::shared_ptr<Expression> expression) : pattern(pattern), expression(expression) {}
       void accept(Visitor &v) override;
     };
     
@@ -92,26 +90,26 @@ namespace wsc {
     
     class VariableArgument final : public Argument {
     public:
-      shared_ptr<Identifier> variable;
+      std::shared_ptr<Identifier> variable;
       
-      VariableArgument(shared_ptr<Identifier> variable) : variable(variable) {}
+      VariableArgument(std::shared_ptr<Identifier> variable) : variable(variable) {}
       void accept(Visitor &v) override;
     };
     
     class LiteralArgument final : public Argument {
     public:
-      shared_ptr<Literal> literal;
+      std::shared_ptr<Literal> literal;
       
-      LiteralArgument(shared_ptr<Literal> literal) : literal(literal) {}
+      LiteralArgument(std::shared_ptr<Literal> literal) : literal(literal) {}
       void accept(Visitor &v) override;
     };
         
     class Binding final : public Node {
     public:
-      shared_ptr<Identifier> binder;
-      shared_ptr<RValue> bindee;
+      std::shared_ptr<Identifier> binder;
+      std::shared_ptr<RValue> bindee;
       
-      Binding(shared_ptr<Identifier> binder, shared_ptr<RValue> bindee) : binder(binder), bindee(bindee) {}
+      Binding(std::shared_ptr<Identifier> binder, std::shared_ptr<RValue> bindee) : binder(binder), bindee(bindee) {}
       void accept(Visitor &v) override;
     };
     
@@ -119,45 +117,45 @@ namespace wsc {
     
     class ApplicationExpression final : public Expression {
     public:
-      shared_ptr<Identifier> function;
-      vector<shared_ptr<Argument>> arguments;
+      std::shared_ptr<Identifier> function;
+      std::vector<std::shared_ptr<Argument>> arguments;
       
-      ApplicationExpression(shared_ptr<Identifier> function, vector<shared_ptr<Argument>> arguments) : function(function), arguments(arguments) {}
+      ApplicationExpression(std::shared_ptr<Identifier> function, std::vector<std::shared_ptr<Argument>> arguments) : function(function), arguments(arguments) {}
       void accept(Visitor &v) override;
     };
     
     class LiteralExpression final : public Expression {
     public:
-      shared_ptr<Literal> literal;
+      std::shared_ptr<Literal> literal;
       
-      LiteralExpression(shared_ptr<Literal> literal) : literal(literal) {}
+      LiteralExpression(std::shared_ptr<Literal> literal) : literal(literal) {}
       void accept(Visitor &v) override;
     };
     
     class LetExpression final : public Expression {
     public:
-      vector<shared_ptr<Binding>> bindings;
-      shared_ptr<Expression> expression;
+      std::vector<std::shared_ptr<Binding>> bindings;
+      std::shared_ptr<Expression> expression;
       
-      LetExpression(vector<shared_ptr<Binding>> bindings, shared_ptr<Expression> expression) : bindings(bindings), expression(expression) {}
+      LetExpression(std::vector<std::shared_ptr<Binding>> bindings, std::shared_ptr<Expression> expression) : bindings(bindings), expression(expression) {}
       void accept(Visitor &v) override;
     };
     
     class CaseExpression final : public Expression {
     public:
-      shared_ptr<Expression> scrutinee;
-      shared_ptr<Identifier> case_binder;
-      vector<shared_ptr<Alternative>> alternatives;
+      std::shared_ptr<Expression> scrutinee;
+      std::shared_ptr<Identifier> case_binder;
+      std::vector<std::shared_ptr<Alternative>> alternatives;
       
-      CaseExpression(shared_ptr<Expression> scrutinee, shared_ptr<Identifier> case_binder, vector<shared_ptr<Alternative>> alternatives) : scrutinee(scrutinee), case_binder(case_binder), alternatives(alternatives) {}
+      CaseExpression(std::shared_ptr<Expression> scrutinee, std::shared_ptr<Identifier> case_binder, std::vector<std::shared_ptr<Alternative>> alternatives) : scrutinee(scrutinee), case_binder(case_binder), alternatives(alternatives) {}
       void accept(Visitor &v) override;
     };
     
     class Identifier final : public Node {
     public:
-      string name;
+      std::string name;
       
-      Identifier(string name) : name(name) {}
+      Identifier(std::string name) : name(name) {}
       void accept(Visitor &v) override; 
     };
     
@@ -183,18 +181,18 @@ namespace wsc {
     
     class AlgebraicPattern final : public Pattern {
     public:
-      shared_ptr<Identifier> constructor;
-      vector<shared_ptr<Identifier>> binders;
+      std::shared_ptr<Identifier> constructor;
+      std::vector<std::shared_ptr<Identifier>> binders;
       
-      AlgebraicPattern(shared_ptr<Identifier> constructor, vector<shared_ptr<Identifier>> binders) : constructor(constructor), binders(binders) {}
+      AlgebraicPattern(std::shared_ptr<Identifier> constructor, std::vector<std::shared_ptr<Identifier>> binders) : constructor(constructor), binders(binders) {}
       void accept(Visitor &v) override;
     };
     
     class LiteralPattern final : public Pattern {
     public:
-      shared_ptr<Literal> literal;
+      std::shared_ptr<Literal> literal;
       
-      LiteralPattern(shared_ptr<Literal> literal) : literal(literal) {}
+      LiteralPattern(std::shared_ptr<Literal> literal) : literal(literal) {}
       void accept(Visitor &v) override;
     };
     
@@ -209,19 +207,19 @@ namespace wsc {
     class ClosureRValue final : public RValue {
     public:
       enum UpdateFlag { UPDATABLE, REENTRANT } update_flag;
-      vector<shared_ptr<Identifier>> binders;
-      shared_ptr<Expression> expression;
+      std::vector<std::shared_ptr<Identifier>> binders;
+      std::shared_ptr<Expression> expression;
       
-      ClosureRValue(UpdateFlag update_flag, vector<shared_ptr<Identifier>> binders, shared_ptr<Expression> expression) : update_flag(update_flag), binders(binders), expression(expression) {}
+      ClosureRValue(UpdateFlag update_flag, std::vector<std::shared_ptr<Identifier>> binders, std::shared_ptr<Expression> expression) : update_flag(update_flag), binders(binders), expression(expression) {}
       void accept(Visitor &v) override;
     };
     
     class DataConRValue final : public RValue {
     public:
-      shared_ptr<Identifier> data_constructor;
-      vector<shared_ptr<Argument>> arguments;
+      std::shared_ptr<Identifier> data_constructor;
+      std::vector<std::shared_ptr<Argument>> arguments;
       
-      DataConRValue(shared_ptr<Identifier> data_constructor, vector<shared_ptr<Argument>> arguments) : data_constructor(data_constructor), arguments(arguments) {}
+      DataConRValue(std::shared_ptr<Identifier> data_constructor, std::vector<std::shared_ptr<Argument>> arguments) : data_constructor(data_constructor), arguments(arguments) {}
       void accept(Visitor &v) override;
     };
   }

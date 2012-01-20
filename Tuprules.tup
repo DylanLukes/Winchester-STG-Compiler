@@ -16,4 +16,4 @@ LDFLAGS += -g -stdlib=libc++
 !ld = |> $(LD) $(LDFLAGS) %f -o %o |> %B.bin
 !ar = |> ar -crs %o %f |>
 !ragel = |> ragel -C -G2 -o %o %f |> %B.cc
-!lemon = |> lemon -q %f |> %B.c %B.h
+!lemon = |> lemon -q %f; mv %B.c %B.cc; mv %B.h %B.hh |> %B.cc %B.hh

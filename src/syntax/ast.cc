@@ -1,5 +1,6 @@
 #include "ast.hh"
 
+using namespace std;
 using namespace wsc::ast;
 
 void Alternative::accept(Visitor &v) {
