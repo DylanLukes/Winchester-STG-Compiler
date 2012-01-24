@@ -1,102 +1,40 @@
 #include "ast.hh"
 
-using namespace std;
+/* Binder */
+
 using namespace wsc::ast;
 
-void Alternative::accept(Visitor &v) {
-  v.visit(*this);
-  pattern->accept(v);
-  expression->accept(v);
+
+Binder::Binder(const Binder &other) {
+  name = other.name;
 }
 
-void VariableArgument::accept(Visitor &v) {
-  v.visit(*this);
-  variable->accept(v);
+Binder *Binder::clone() const { 
+  return new Binder(*this);
 }
 
-void LiteralArgument::accept(Visitor &v) {
-  v.visit(*this);
-  literal->accept(v);
+void Binder::accept(Visitor &v) {
+  v.visitBinder(*this);
 }
 
-void Binding::accept(Visitor &v) {
-  v.visit(*this);
-  binder->accept(v);
-  bindee->accept(v);
+void Binder::display(std::ostream &o) const {
+  o << "Binder[name=" << name << "]";
 }
 
-void ApplicationExpression::accept(Visitor &v) {
-  v.visit(*this);
-  function->accept(v);
-  for (shared_ptr<Argument> arg : arguments) {
-    arg->accept(v);
-  }
+/* Occurrence */
+
+Occurrence::Occurrence(const Occurrence &other) {
+  origin = other.origin;
 }
 
-void LiteralExpression::accept(Visitor &v) {
-  v.visit(*this);
-  literal->accept(v);
+Occurrence *Occurrence::clone() const {
+  return new Occurrence(*this);
 }
 
-void LetExpression::accept(Visitor &v) {
-  v.visit(*this);
-  for (shared_ptr<Binding> binding : bindings) {
-    binding->accept(v);
-  }
-  expression->accept(v);
+void Occurrence::accept(Visitor &v) {
+  v.visitOccurrence(*this);
 }
 
-void CaseExpression::accept(Visitor &v) {
-  v.visit(*this);
-  scrutinee->accept(v);
-  case_binder->accept(v);
-  for (shared_ptr<Alternative> alt : alternatives) {
-    alt->accept(v);
-  }
+void Occurrence::display(std::ostream &o) const {
+  o << "Occurrence[origin.name=" << origin->name << "]";
 }
-
-void Identifier::accept(Visitor &v) {
-  v.visit(*this);
-}
-
-void IntegralLiteral::accept(Visitor &v) {
-  v.visit(*this);
-}
-
-void RealLiteral::accept(Visitor &v) {
-  v.visit(*this);
-}
-
-void AlgebraicPattern::accept(Visitor &v) {
-  v.visit(*this);
-  constructor->accept(v);
-  for (shared_ptr<Identifier> binder : binders) {
-    binder->accept(v);
-  }
-}
-
-void LiteralPattern::accept(Visitor &v) {
-  v.visit(*this);
-  literal->accept(v);
-}
-
-void DefaultPattern::accept(Visitor &v) {
-  v.visit(*this);
-}
-
-void ClosureRValue::accept(Visitor &v) {
-  v.visit(*this);
-  for (shared_ptr<Identifier> binder : binders) {
-    binder->accept(v);
-  }
-  expression->accept(v);
-}
-
-void DataConRValue::accept(Visitor &v) {
-  v.visit(*this);
-  data_constructor->accept(v);
-  for (shared_ptr<Argument> arg : arguments) {
-    arg->accept(v);
-  }
-}
-

@@ -24,10 +24,10 @@ using namespace wsc::lex;
     '}'                       => {};
     '->'                      => {};
 
-    ([A-Z_][a-zA-Z0-9_#]*)    => {cout << "CON ID: " << string(ts, te-ts) << "\n"; };
-    ([a-zA-Z_][a-zA-Z0-9_#]*) => {cout << "ID: " << string(ts, te-ts) << "\n"; };
-    ([+\-*#]+)                => {cout << "SYM: " << string(ts, te-ts) << "\n"; };
-    ([0-9]+('.'[0-9]+)?)      => {cout << "NUM\n";    };
+    ([A-Z_][a-zA-Z0-9_#]*)    => {};
+    ([a-zA-Z_][a-zA-Z0-9_#]*) => {};
+    ([+\-*#]+)                => {};
+    ([0-9]+('.'[0-9]+)?)      => {};
 
     # White space
     (any - 33..126)+;
