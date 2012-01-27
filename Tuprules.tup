@@ -6,11 +6,14 @@ LD = clang++
 CXXFLAGS += -stdlib=libc++ -std=c++0x -pedantic
 CXXFLAGS += -Wall -Wextra -Werror
 CXXFLAGS += -Wno-unused-parameter
-CXXFLAGS += -fno-rtti -fno-exceptions
+CXXFLAGS += -fno-exceptions
 CXXFLAGS += -arch x86_64
 CXXFLAGS += -g
+CXXFLAGS += -I/usr/local/include
+CXXFLAGS += -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS
 
-LDFLAGS += -g -stdlib=libc++
+LDFLAGS += -g -stdlib=libc++ -L/usr/local/lib
+LDFLAGS += -lLLVM-3.0
 
 !cxx = |> $(CXX) $(CXXFLAGS) -c %f -o %o |> %B.o
 !ld = |> $(LD) $(LDFLAGS) %f -o %o |> %B.bin

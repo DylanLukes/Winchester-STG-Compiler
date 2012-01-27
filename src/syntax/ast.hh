@@ -5,64 +5,167 @@
 #include <memory>
 #include <string>
 
+#include <llvm/Value.h>
+
 namespace wsc {
   namespace ast {
 
     /* abstract */ class Node;
+    /* abstract */ class Bindee;
     /* concrete */ class Binder;
-    /* concrete */ class Occurrence;
+    /* concrete */ class Binding;
+    /* abstract */ class Expression; // TODO
+      /* concrete */ class LetExpression;
+      /* concrete */ class LiteralExpression;
+    /* abstract */ class Literal;
+    /* concrete */   class IntegralLiteral;
+    /* abstract */ class Occurrence;
+      /* concrete */ class LocalOccurrence;
+    /* abstract */ class Operand;
+      /* concrete */   class LiteralOperand;
 
     /* Visitor */
+    inline void do_nothing(Node &) {} ;
 
-    class Visitor {
-    public:
-      std::function<void (Binder &)>     visitBinder;
-      std::function<void (Occurrence &)> visitOccurrence;
+    struct Visitor {
+      Visitor() : visitBinder            (do_nothing)
+                , visitBinding           (do_nothing)
+                , visitLetExpression     (do_nothing)
+                , visitLiteralExpression (do_nothing)
+                , visitIntegralLiteral   (do_nothing)
+                , visitLocalOccurrence   (do_nothing)
+                , visitLiteralOperand    (do_nothing) {}
+
+      std::function<void (Binder &)>            visitBinder;
+      std::function<void (Binding &)>           visitBinding;
+      std::function<void (LetExpression &)>     visitLetExpression;
+      std::function<void (LiteralExpression &)> visitLiteralExpression;
+      std::function<void (IntegralLiteral &)>   visitIntegralLiteral;
+      std::function<void (LocalOccurrence &)>   visitLocalOccurrence;
+      std::function<void (LiteralOperand &)>    visitLiteralOperand;
     };
 
-    /* Node */
-    // Node is the base class of all abstract syntax nodes.
+    /* Abstract Base Class */ 
 
+    template <class T>
     class Node {
     public:
       virtual Node *clone() const = 0;
       virtual void accept(Visitor &) = 0;
 
+      friend llvm::Value *codegen(Node &);
       friend std::ostream &operator<<(std::ostream &o, Node const &node) {
         node.display(o); return o;
-      }      
+      }
+
+      friend struct Visitor;
     protected:
       virtual void display(std::ostream &) const = 0;
     };
 
-    /* Binder */
-    // Binder represents the binding site of an identifier.
+    /* Classes */
 
-    class Binder final : public Node {
+    class Bindee : public Node {
+      std::weak_ptr<Binding> binding;
+    };
+
+    class Binder : public Node {
     public:
       Binder(std::string name) : name(name) {}
-      Binder(const Binder &);
 
       Binder *clone() const override;
       void accept(Visitor &) override;
 
       std::string name;
+      std::weak_ptr<Binding> binding;
     private:
       void display(std::ostream &) const override;
     };
 
-    /* Occurrence */
-    // An Occurence is just a redirection to its Binder.
-
-    class Occurrence : public Node {
+    class Binding : public Node {
     public:
-      Occurrence(std::shared_ptr<Binder> origin) : origin(origin) {}
-      Occurrence(const Occurrence &);
+      Binding(std::shared_ptr<Binder> binder, std::shared_ptr<Bindee> bindee)
+        : binder(binder)
+        , bindee(bindee) {}
 
-      Occurrence *clone() const override;
+      Binding *clone() const override;
+      void accept(Visitor &) override;
+    
+      std::shared_ptr<Binder> binder;
+      std::shared_ptr<Bindee> bindee;
+    private:
+      void display(std::ostream &) const override;
+    };
+
+    class Expression : public Node {};
+
+    class LetExpression : public Expression {
+    public:
+      LetExpression(std::shared_ptr<Binding> binding, std::shared_ptr<Expression> expression)
+        : binding(binding)
+        , expression(expression) {}
+    
+      LetExpression *clone() const override;
       void accept(Visitor &) override;
 
-      std::shared_ptr<Binder> origin;
+      std::shared_ptr<Binding> binding;
+      std::shared_ptr<Expression> expression;
+    private:
+      void display(std::ostream &) const override;
+    };
+
+    class LiteralExpression : public Expression {
+    public:
+      LiteralExpression(std::shared_ptr<Literal> literal)
+        : literal(literal) {}
+    
+      LiteralExpression *clone() const override;
+      void accept(Visitor &) override;
+
+      std::shared_ptr<Literal> literal;
+    private:
+      void display(std::ostream &) const override;
+    };
+
+    class Literal : public Node {};
+
+    class IntegralLiteral : public Literal {
+    public:
+      IntegralLiteral(int value) : value(value) {}
+
+      IntegralLiteral *clone() const override;
+      void accept(Visitor &) override;
+
+      int value;
+    private:
+      void display(std::ostream &) const override;
+    };
+
+    class Occurrence : public Node {};
+
+    class LocalOccurrence : public Occurrence {
+    public:
+      LocalOccurrence(std::shared_ptr<Binder> binder) : binder(binder) {}
+
+      LocalOccurrence *clone() const override;
+      void accept(Visitor &) override;
+
+      std::shared_ptr<Binder> binder;
+    private:
+      void display(std::ostream &) const override;
+    };
+
+    class Operand : public Node {};
+
+    class LiteralOperand : public Operand {
+    public:
+      LiteralOperand(std::shared_ptr<Literal> literal) 
+        : literal(literal) {}
+
+      LiteralOperand *clone() const override;
+      void accept(Visitor &) override;
+
+      std::shared_ptr<Literal> literal;
     private:
       void display(std::ostream &) const override;
     };
