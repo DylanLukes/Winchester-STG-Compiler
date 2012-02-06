@@ -9,12 +9,24 @@
 --
 -- The representation of the abstract syntax tree for WSC source code. 
 -----------------------------------------------------------------------------
-module WSC.AST where
+module WSC.AST ( Var
+               , Con
+               , Arity
+               , Atom(..)
+               , Lit(..)
+               , Expr(..)
+               , Alt(..)
+               , Obj(..)
+               , PrimOp(..)
+               , Decl(..)
+               , Prog(..) ) where
+
+import Data.ByteString
 
 -- | Variable identifiers.
-type Var = String
+type Var = ByteString
 -- | Constructor identifiers.
-type Con = String
+type Con = ByteString
 
 -- | Arity, which may or may not be statically known (!).
 type Arity = Maybe Int
@@ -61,6 +73,17 @@ data PrimOp
   | LteOp | GteOp
   | IntToBoolOp
   deriving (Eq, Show)
+
+argCount :: PrimOp -> Int
+argCount AddOp       = 2
+argCount SubOp       = 2
+argCount MulOp       = 2
+argCount EqOp        = 2
+argCount LtOp        = 2
+argCount GtOp        = 2
+argCount LteOp       = 2
+argCount GteOp       = 2
+argCount IntToBoolOp = 1
 
 -- | Top-level declarations (TLDs).
 data Decl = Decl Var Obj deriving (Eq, Show)
