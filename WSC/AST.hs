@@ -48,7 +48,7 @@ data Expr
   | FunAppExpr Arity Var [Atom]
   | PrimOpExpr PrimOp [Atom]
   | LetExpr    [Decl] Expr
-  | CaseExpr   Expr Var [Alt]
+  | CaseExpr   Expr (Maybe Var) [Alt]
   deriving (Eq, Show)
 
 -- | Alternatives for a 

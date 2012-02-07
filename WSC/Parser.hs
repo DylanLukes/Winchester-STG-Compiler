@@ -82,7 +82,7 @@ expr =  try funAppExpr
         funAppExpr = FunAppExpr Nothing <$> var <*> some atom
         primOpExpr = PrimOpExpr <$> primOp <*> many atom
         letExpr    = LetExpr <$ kw "let" <*> braces (decl `sepEndBy1` semi) <* kw "in" <*> expr
-        caseExpr   = CaseExpr <$ kw "case" <*> expr <* kw "of" <*> var <*> braces (alt `sepEndBy1` semi)
+        caseExpr   = CaseExpr <$ kw "case" <*> expr <* kw "of" <*> optional var <*> braces (alt `sepEndBy1` semi)
 
 alt :: MonadParser m => m Alt
 alt =  algAlt

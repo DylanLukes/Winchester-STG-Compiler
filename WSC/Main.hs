@@ -10,21 +10,29 @@ import Text.Groom
 import WSC.Parser (parseFile)
 
 data WSCFlags = WSCFlags
-  { dumpAst :: Bool
-  , file    :: FilePath
-  , outfile :: FilePath
+  { printAst      :: Bool
+  , printSymTable :: Bool
+  , file         :: FilePath
+  , outfile      :: FilePath
   } deriving (Eq, Show, Data, Typeable)
 
 wscFlags = WSCFlags 
-  { dumpAst = False
-           &= name "dump-ast" 
-           &= help "Dump a textual representation of the AST."
-  , file    = def
-           &= args
-           &= typFile
-  , outfile = def
-           &= typFile
-           &= help "Destination of output file."
+  { printAst
+      = False
+     &= name "print-ast" 
+     &= help "Print the AST."
+  , printSymTable
+      = False
+     &= name "print-symtable"
+     &= help "Print the symbol table."
+  , file    
+      = def
+     &= args
+     &= typFile
+  , outfile 
+      = def
+     &= typFile
+     &= help "Destination of output file."
   } &= program "wsc"
     &= summary "Winchester STG Compiler v0.0, (c) Dylan Lukes 2012"
 
@@ -34,6 +42,6 @@ main = do
   when (isNothing ast) $ do
     print "Fail: Parsing failed."
     exitFailure
-  when (dumpAst args) $ do
+  when (printAst args) $ do
     putStrLn . groom $ ast
   exitSuccess
