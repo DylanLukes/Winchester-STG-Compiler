@@ -6,6 +6,7 @@ import Data.Maybe
 import System.Console.CmdArgs
 import System.Exit
 import System.IO.Error
+import Text.Groom
 import WSC.Parser (parseFile)
 
 data WSCFlags = WSCFlags
@@ -34,5 +35,5 @@ main = do
     print "Fail: Parsing failed."
     exitFailure
   when (dumpAst args) $ do
-    print ast
+    putStrLn . groom $ ast
   exitSuccess
