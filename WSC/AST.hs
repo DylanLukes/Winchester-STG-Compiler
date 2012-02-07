@@ -47,7 +47,7 @@ data Expr
   = AtomExpr   Atom
   | FunAppExpr Arity Var [Atom]
   | PrimOpExpr PrimOp [Atom]
-  | LetExpr    Var Obj Expr
+  | LetExpr    [Decl] Expr
   | CaseExpr   Expr Var [Alt]
   deriving (Eq, Show)
 
@@ -85,7 +85,7 @@ argCount LteOp       = 2
 argCount GteOp       = 2
 argCount IntToBoolOp = 1
 
--- | Top-level declarations (TLDs).
+-- | Declarations (Bindings).
 data Decl = Decl Var Obj deriving (Eq, Show)
 
 -- | Whole programs.
