@@ -14,11 +14,11 @@ module WSC.Parser where
 
 import Control.Applicative
 import Data.ByteString
-import Data.Monoid
+import Data.Monoid()
 import Text.Trifecta hiding (semi)
 import qualified Text.Trifecta as Trifecta (semi)
 import Text.Trifecta.Highlight.Prim as Highlight
-import Text.Trifecta.Parser.Identifier.Style
+import Text.Trifecta.Parser.Identifier.Style()
 import WSC.AST
 import WSC.Util
 
@@ -100,7 +100,7 @@ obj =  funObj
   where funObj = kw "FUN" *> parens (FunObj <$> many var <* symbol "->" <*> expr)
         papObj = kw "PAP" *> parens (PapObj <$> var <*> many atom)
         conObj = kw "CON" *> parens (ConObj <$> con <*> many atom)
-        thunkObj     = ThunkObj <$ kw "THUNK" <*> parens (expr)
+        thunkObj     = ThunkObj <$ kw "THUNK" <*> parens expr
         blackHoleObj = BlackHoleObj <$ kw "BLACKHOLE"
 
 primOp :: MonadParser m => m PrimOp
@@ -121,4 +121,4 @@ prog :: MonadParser m => m Prog
 prog = Prog <$> decl `sepEndBy` semi
 
 parseFile :: FilePath -> IO (Maybe Prog)
-parseFile filePath = parseFromFile prog filePath
+parseFile = parseFromFile prog

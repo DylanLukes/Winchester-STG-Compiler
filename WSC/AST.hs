@@ -9,8 +9,8 @@
 --
 -- The representation of the abstract syntax tree for WSC source code. 
 -----------------------------------------------------------------------------
-module WSC.AST ( Var
-               , Con
+module WSC.AST ( Var(..)
+               , Con(..)
                , Arity
                , Atom(..)
                , Lit(..)
@@ -65,6 +65,10 @@ data Obj
   | ThunkObj Expr
   | BlackHoleObj
   deriving (Eq, Show)
+
+isFun :: Obj -> Bool
+isFun (FunObj _ _) = True
+isFun _ = False
 
 -- | Primitive operations.
 data PrimOp

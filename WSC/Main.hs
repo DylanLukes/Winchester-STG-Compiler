@@ -1,22 +1,28 @@
-{-# LANGUAGE TemplateHaskell, DeriveDataTypeable #-}
+{-# LANGUAGE DeriveDataTypeable, GeneralizedNewtypeDeriving #-}
 module WSC.Main where
 
-import Control.Monad
-import Data.Maybe
-import System.Console.CmdArgs
+import Control.Monad.Error
+import Control.Monad.State
+
+import System.Console.CmdArgs.Implicit
 import System.Exit
-import System.IO.Error
+
 import Text.Groom
+import Text.Printf
+
+import WSC.AST as AST
+import WSC.Arity
+import WSC.Driver
 import WSC.Parser (parseFile)
 
 data WSCFlags = WSCFlags
   { printAst      :: Bool
   , printSymTable :: Bool
-  , file         :: FilePath
-  , outfile      :: FilePath
+  , file          :: FilePath
+  , outfile       :: FilePath
   } deriving (Eq, Show, Data, Typeable)
 
-wscFlags = WSCFlags 
+flags = WSCFlags 
   { printAst
       = False
      &= name "print-ast" 
@@ -36,12 +42,33 @@ wscFlags = WSCFlags
   } &= program "wsc"
     &= summary "Winchester STG Compiler v0.0, (c) Dylan Lukes 2012"
 
+driver :: WSCDriver String AST.Prog ExitCode
+driver = let 
+  run = do
+    args <- io $ cmdArgs flags
+
+    io (parseFile $ file args) >>=
+      maybe 
+        (throwError $ strMsg "Could not parse file.")
+        put
+
+    when (printAst args) $ do
+      ast <- get
+      io $ putStrLn (groom ast)
+
+    pass resolveArities
+
+    return ExitSuccess
+
+  in catchError run $ \e -> do
+    io $ print e
+    return (ExitFailure (-1))
+
 main = do
-  args <- cmdArgs wscFlags
-  ast  <- parseFile (file args)
-  when (isNothing ast) $ do
-    print "Fail: Parsing failed."
-    exitFailure
-  when (printAst args) $ do
-    putStrLn . groom $ ast
-  exitSuccess
+  -- this undefined will be promptly replaced by `put'
+  r <- evalStateT (runErrorT (runWSCDriver driver)) (undefined)
+  case r of
+    Left err -> do
+      printf "Unhandled error in driver: %s" (show err)
+      exitFailure 
+    Right ec -> exitWith ec
