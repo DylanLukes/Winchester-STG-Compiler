@@ -46,15 +46,10 @@ driver :: WSCDriver String AST.Prog ExitCode
 driver = let 
   run = do
     args <- io $ cmdArgs flags
-
-    pass (parseFile $ file args)
-
-    when (printAst args) $ do
-      ast <- get
-      io $ putStrLn (groom ast)
-
-    pass resolveArities
-
+    parseFile (file args)
+    when (printAst args) $
+      get >>= (\x -> io (putStrLn . groom $ x))
+    resolveArities
     return ExitSuccess
 
   in catchError run $ \e -> do
@@ -63,7 +58,7 @@ driver = let
 
 main = do
   -- this undefined will be promptly replaced by `put'
-  r <- evalStateT (runErrorT (runWSCDriver driver)) (undefined)
+  r <- evalStateT (runErrorT (runWSCDriver driver)) undefined
   case r of
     Left err -> do
       printf "Unhandled error in driver: %s" (show err)

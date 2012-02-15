@@ -38,10 +38,21 @@ data Atom
   | VarAtom Annotation Var
   deriving (Eq, Show)
 
+instance HasAnnotation Atom where
+  getAnnotation (LitAtom ann _) = ann
+  getAnnotation (VarAtom ann _) = ann
+
+  setAnnotation ann (LitAtom _ lit) = LitAtom ann lit
+  setAnnotation ann (VarAtom _ var) = VarAtom ann var
+
 -- | Literals. Currently only integers.
 data Lit
   = IntLit Annotation Integer
   deriving (Eq, Show)
+
+instance HasAnnotation Lit where
+  getAnnotation (IntLit ann _) = ann
+  setAnnotation ann (IntLit _ int) = IntLit ann int 
 
 -- | Expressions. They is what they is.
 data Expr
@@ -52,12 +63,32 @@ data Expr
   | CaseExpr   Annotation Expr (Maybe Var) [Alt]
   deriving (Eq, Show)
 
+instance HasAnnotation Expr where
+  getAnnotation (AtomExpr   ann _)     = ann
+  getAnnotation (FunAppExpr ann _ _ _) = ann
+  getAnnotation (PrimOpExpr ann _ _)   = ann
+  getAnnotation (LetExpr    ann _ _)   = ann
+  getAnnotation (CaseExpr   ann _ _ _) = ann
+
+  setAnnotation ann (AtomExpr _ atom )       = AtomExpr ann atom
+  setAnnotation ann (FunAppExpr _ a f args)  = FunAppExpr ann a f args
+  setAnnotation ann (PrimOpExpr _ op args)   = PrimOpExpr ann op args
+  setAnnotation ann (LetExpr _ bnds body)    = LetExpr ann bnds body
+  setAnnotation ann (CaseExpr _ expr s alts) = CaseExpr ann expr s alts 
+
 -- | Alternatives for a 
 data Alt
   = AlgAlt     Annotation Con [Var] Expr
   -- ^ Default pattern. No `Var' is needed since the scrutinee is bound in the CaseExpr.
   | DefaultAlt Annotation Expr
   deriving (Eq, Show)
+
+instance HasAnnotation Alt where
+  getAnnotation (AlgAlt ann _ _ _) = ann
+  getAnnotation (DefaultAlt ann _) = ann
+
+  setAnnotation ann (AlgAlt _ con vars expr) = AlgAlt ann con vars expr 
+  setAnnotation ann (DefaultAlt _ expr)      = DefaultAlt ann expr
 
 data Obj
   = FunObj       Annotation [Var] Expr
@@ -67,8 +98,21 @@ data Obj
   | BlackHoleObj Annotation
   deriving (Eq, Show)
 
+instance HasAnnotation Obj where
+  getAnnotation (FunObj ann _ _)   = ann
+  getAnnotation (PapObj ann _ _)   = ann
+  getAnnotation (ConObj ann _ _)   = ann
+  getAnnotation (ThunkObj ann _)   = ann
+  getAnnotation (BlackHoleObj ann) = ann
+
+  setAnnotation ann (FunObj _ vars body) = FunObj ann vars body 
+  setAnnotation ann (PapObj _ f args)    = PapObj ann f args
+  setAnnotation ann (ConObj _ con args)  = ConObj ann con args
+  setAnnotation ann (ThunkObj _ expr)    = ThunkObj ann expr
+  setAnnotation ann (BlackHoleObj _)     = BlackHoleObj ann
+
 isFun :: Obj -> Bool
-isFun (FunObj _ _ _) = True
+isFun FunObj{} = True
 isFun _ = False
 
 -- | Primitive operations.
@@ -93,6 +137,14 @@ argCount IntToBoolOp = 1
 -- | Declarations (Bindings).
 data Decl = Decl Annotation Var Obj deriving (Eq, Show)
 
+instance HasAnnotation Decl where
+  getAnnotation (Decl ann _ _) = ann
+  setAnnotation ann (Decl _ var obj) = Decl ann var obj 
+
 -- | Whole programs.
 data Prog = Prog Annotation [Decl] deriving (Eq, Show)
+
+instance HasAnnotation Prog where
+  getAnnotation (Prog ann _) = ann
+  setAnnotation ann (Prog _ decls) = Prog ann decls 
 

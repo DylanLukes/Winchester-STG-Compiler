@@ -23,10 +23,12 @@ import WSC.AST
 import WSC.Driver
 
 
-resolveArities :: ArityAnalysis s => Pass String s
-resolveArities ast = case runRWS (arityAnalysis ast) mempty () of
-  (ast', _, Nothing)  -> Right ast'
-  (_,    _, Just err) -> Left err
+resolveArities :: (ArityAnalysis s) => WSCDriver String s ()
+resolveArities = do
+  ast <- get
+  case runRWS (arityAnalysis ast) mempty () of
+    (ast', _, Nothing)  -> put ast'
+    (_,    _, Just err) -> throwError err
 
 type SymbolTable = HashMap Var Int -- R
 

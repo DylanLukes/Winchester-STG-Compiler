@@ -13,12 +13,16 @@
 module WSC.Parser where
 
 import Control.Applicative
+import Control.Monad.State
+import Control.Monad.Error
+
 import Data.ByteString
 import Data.Monoid()
 import Text.Trifecta hiding (semi)
 import qualified Text.Trifecta as Trifecta (semi)
 import Text.Trifecta.Highlight.Prim as Highlight
 import Text.Trifecta.Parser.Identifier.Style()
+import Text.Trifecta.Parser.Result
 
 import WSC.AST
 import WSC.AST.Annotation
@@ -27,10 +31,12 @@ import WSC.Util
 
 {- Pass -}
 
-parseFile :: FilePath -> Pass e Prog
-parseFile f ast = do
-  undefined
-  -- result <- parseFromFileEx prog f
+parseFile :: FilePath -> WSCDriver String Prog ()
+parseFile f = do
+  result <- io $ parseFromFileEx prog f
+  case result of
+    Success ds _ -> return ()
+    Failure ds   -> throwError "all the parsing fucked up"
 
 -- parseFile :: FilePath -> IO (Maybe Prog)
 -- parseFile = parseFromFile prog
