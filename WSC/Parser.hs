@@ -19,8 +19,23 @@ import Text.Trifecta hiding (semi)
 import qualified Text.Trifecta as Trifecta (semi)
 import Text.Trifecta.Highlight.Prim as Highlight
 import Text.Trifecta.Parser.Identifier.Style()
+
 import WSC.AST
+import WSC.AST.Annotation
+import WSC.Driver
 import WSC.Util
+
+{- Pass -}
+
+parseFile :: FilePath -> Pass e Prog
+parseFile f ast = do
+  undefined
+  -- result <- parseFromFileEx prog f
+
+-- parseFile :: FilePath -> IO (Maybe Prog)
+-- parseFile = parseFromFile prog
+
+{- Util -}
 
 -- This is annoying. Make sure edwardk fixes it...
 semi :: MonadParser m => m Char
@@ -64,12 +79,12 @@ con = lexeme . ident $ IdentifierStyle
 atom :: MonadParser m => m Atom
 atom =  litAtom
     <|> varAtom
-  where litAtom = LitAtom <$> lit
-        varAtom = VarAtom <$> var
+  where litAtom = LitAtom emptyAnnotation <$> lit
+        varAtom = VarAtom emptyAnnotation <$> var
 
 lit :: MonadParser m => m Lit
 lit = intLit
-  where intLit = IntLit <$> integer
+  where intLit = IntLit emptyAnnotation <$> integer
 
 expr :: MonadParser m => m Expr
 expr =  try funAppExpr 
@@ -78,18 +93,18 @@ expr =  try funAppExpr
     <|> letExpr
     <|> caseExpr
     <?> "expression"
-  where atomExpr   = AtomExpr <$> atom
-        funAppExpr = FunAppExpr Nothing <$> var <*> some atom
-        primOpExpr = PrimOpExpr <$> primOp <*> many atom
-        letExpr    = LetExpr <$ kw "let" <*> braces (decl `sepEndBy1` semi) <* kw "in" <*> expr
-        caseExpr   = CaseExpr <$ kw "case" <*> expr <* kw "of" <*> optional var <*> braces (alt `sepEndBy1` semi)
+  where atomExpr   = AtomExpr   emptyAnnotation         <$> atom
+        funAppExpr = FunAppExpr emptyAnnotation Nothing <$> var    <*> some atom
+        primOpExpr = PrimOpExpr emptyAnnotation         <$> primOp <*> many atom
+        letExpr    = LetExpr    emptyAnnotation <$ kw "let"  <*> braces (decl `sepEndBy1` semi) <* kw "in" <*> expr
+        caseExpr   = CaseExpr   emptyAnnotation <$ kw "case" <*> expr <* kw "of" <*> optional var <*> braces (alt `sepEndBy1` semi)
 
 alt :: MonadParser m => m Alt
 alt =  algAlt
    <|> defaultAlt
    <?> "alternative"
-  where algAlt = AlgAlt <$> con <*> many var <* kw "->" <*> expr
-        defaultAlt = DefaultAlt <$ kw "_" <* kw "->" <*> expr
+  where algAlt     = AlgAlt     emptyAnnotation <$> con <*> many var <* kw "->" <*> expr
+        defaultAlt = DefaultAlt emptyAnnotation <$ kw "_" <* kw "->" <*> expr
 
 obj :: MonadParser m => m Obj
 obj =  funObj
@@ -97,11 +112,11 @@ obj =  funObj
    <|> conObj
    <|> thunkObj
    <|> blackHoleObj
-  where funObj = kw "FUN" *> parens (FunObj <$> many var <* symbol "->" <*> expr)
-        papObj = kw "PAP" *> parens (PapObj <$> var <*> many atom)
-        conObj = kw "CON" *> parens (ConObj <$> con <*> many atom)
-        thunkObj     = ThunkObj <$ kw "THUNK" <*> parens expr
-        blackHoleObj = BlackHoleObj <$ kw "BLACKHOLE"
+  where funObj = kw "FUN" *> parens (FunObj emptyAnnotation <$> many var <* symbol "->" <*> expr)
+        papObj = kw "PAP" *> parens (PapObj emptyAnnotation <$> var <*> many atom)
+        conObj = kw "CON" *> parens (ConObj emptyAnnotation <$> con <*> many atom)
+        thunkObj     = ThunkObj     emptyAnnotation <$ kw "THUNK" <*> parens expr
+        blackHoleObj = BlackHoleObj emptyAnnotation <$ kw "BLACKHOLE"
 
 primOp :: MonadParser m => m PrimOp
 primOp =  AddOp <$ kw "add#" 
@@ -115,10 +130,8 @@ primOp =  AddOp <$ kw "add#"
       <|> IntToBoolOp <$ kw "intToBool#"
 
 decl :: MonadParser m => m Decl
-decl = Decl <$> var <* symbol "=" <*> obj
+decl = Decl emptyAnnotation <$> var <* symbol "=" <*> obj
+
 
 prog :: MonadParser m => m Prog
-prog = Prog <$> decl `sepEndBy` semi
-
-parseFile :: FilePath -> IO (Maybe Prog)
-parseFile = parseFromFile prog
+prog = Prog emptyAnnotation <$> decl `sepEndBy` semi

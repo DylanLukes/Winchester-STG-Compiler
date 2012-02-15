@@ -22,5 +22,3 @@ pass p = do
   case p x of
     Right r -> put r
     Left  e -> throwError e
-          
-             

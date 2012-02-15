@@ -22,15 +22,16 @@ import Data.List (foldl')
 import WSC.AST
 import WSC.Driver
 
-type SymbolTable = HashMap Var Int -- R
-
-removeVars :: [Var] -> SymbolTable -> SymbolTable
-removeVars vars symtab = foldl' (flip HashMap.delete) symtab vars 
 
 resolveArities :: ArityAnalysis s => Pass String s
 resolveArities ast = case runRWS (arityAnalysis ast) mempty () of
   (ast', _, Nothing)  -> Right ast'
   (_,    _, Just err) -> Left err
+
+type SymbolTable = HashMap Var Int -- R
+
+removeVars :: [Var] -> SymbolTable -> SymbolTable
+removeVars vars symtab = foldl' (flip HashMap.delete) symtab vars 
 
 class ArityAnalysis a where
   arityAnalysis :: a -> RWS SymbolTable (Maybe String) () a
@@ -39,22 +40,22 @@ instance ArityAnalysis Expr where
   arityAnalysis = undefined
 
 instance ArityAnalysis Obj where
-  arityAnalysis (FunObj args body) = do
+  arityAnalysis (FunObj ann args body) = do
     body' <- local
       (removeVars args)
       (arityAnalysis body)
-    return (FunObj args body')
+    return (FunObj ann args body')
 
 instance ArityAnalysis Decl where
-  arityAnalysis (Decl var obj) = do
+  arityAnalysis (Decl ann var obj) = do
     obj' <- arityAnalysis obj
-    return (Decl var obj')
+    return (Decl ann var obj')
 
 instance ArityAnalysis Prog where
-  arityAnalysis (Prog decls) = do
+  arityAnalysis (Prog ann decls) = do
     let globals = HashMap.fromList
-          [ (var, length args) | Decl var (FunObj args _) <- decls ]
+          [ (var, length args) | Decl _ var (FunObj _ args _) <- decls ]
     decls' <- local 
       (mappend globals)
       (arityAnalysis `mapM` decls)
-    return (Prog decls')
+    return (Prog ann decls')

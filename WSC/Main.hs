@@ -47,10 +47,7 @@ driver = let
   run = do
     args <- io $ cmdArgs flags
 
-    io (parseFile $ file args) >>=
-      maybe 
-        (throwError $ strMsg "Could not parse file.")
-        put
+    pass (parseFile $ file args)
 
     when (printAst args) $ do
       ast <- get
