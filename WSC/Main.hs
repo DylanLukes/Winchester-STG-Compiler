@@ -49,7 +49,7 @@ driver = let
     parseFile (file args)
     when (printAst args) $
       get >>= (\x -> io (putStrLn . groom $ x))
-    resolveArities
+    -- resolveArities
     return ExitSuccess
 
   in catchError run $ \e -> do

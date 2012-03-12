@@ -17,7 +17,6 @@ import Control.Monad.State
 import Control.Monad.Error
 
 import Data.ByteString
-import Data.Monoid()
 import Text.Trifecta hiding (semi)
 import qualified Text.Trifecta as Trifecta (semi)
 import Text.Trifecta.Highlight.Prim as Highlight
@@ -36,7 +35,7 @@ parseFile f = do
   result <- io $ parseFromFileEx prog f
   case result of
     Success ds _ -> return ()
-    Failure ds   -> throwError "all the parsing fucked up"
+    Failure ds   -> throwError "all the parsing [nassar friendly]ed up"
 
 -- parseFile :: FilePath -> IO (Maybe Prog)
 -- parseFile = parseFromFile prog

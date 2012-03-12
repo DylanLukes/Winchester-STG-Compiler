@@ -8,6 +8,8 @@ import Control.Monad.State
 
 import Data.Either
 
+import Text.Trifecta.Diagnostic
+
 newtype WSCDriver e s a = WSCDriver { runWSCDriver :: ErrorT e (StateT s IO) a }
   deriving (Functor, Applicative, Monad, MonadPlus, MonadIO, MonadError e, MonadState s) -- hax
 

@@ -1,0 +1,2 @@
+module WSC.Error where
+
