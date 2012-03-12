@@ -39,6 +39,6 @@ Executable wsc
   other-modules:    WSC.AST
                     WSC.Parser
   
-  -- Extra tools (e.g. alex, hsc2hs, ...) needed to build the source.
-  -- Build-tools:         
+  -- extra tools (e.g. alex, hsc2hs, ...) needed to build the source.
+  -- build-tools:         
   
