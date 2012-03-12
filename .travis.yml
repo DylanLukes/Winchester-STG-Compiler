@@ -7,4 +7,4 @@ install:
 
 # disable email notifications
 notifications:
-  email: false
+  email: lukes.dylan+travis@gmail.com
