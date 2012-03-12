@@ -1,2 +1,6 @@
 language: haskell
-before_script: cabal update
+
+# simple custom build/installation path
+install:
+  - cabal update
+  - cabal install
