@@ -36,8 +36,7 @@ Executable wsc
                     utf8-string          >= 0.3.0   && < 0.4.0,
                     wl-pprint-terminfo   >= 0.8.0   && < 0.9
   
-  other-modules:    WSC.AST
-                    WSC.Parser
+  other-modules:    
   
   -- extra tools (e.g. alex, hsc2hs, ...) needed to build the source.
   -- build-tools:         
